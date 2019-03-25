@@ -1,25 +1,24 @@
 /* Add your Application JavaScript */
 Vue.component('app-header', {
     template: `
-        <header>
+    <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
               <a class="navbar-brand" href="#">VueJS App</a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
-
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <router-link to="/" class="nav-link">Home</router-link>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">News</a>
+                    <router-link to="/news" class="nav-link">News</router-link>
                   </li>
                 </ul>
               </div>
             </nav>
-        </header>    
+        </header>      
     `,
     data: function() {}
 });
@@ -41,7 +40,7 @@ Vue.component('app-footer', {
 
 
 
-Vue.component('news-list' , {
+const NewsList = Vue.component('news-list' , {
 template:`
 <div class="news">
 <h2>News</h2>
@@ -65,7 +64,7 @@ search  term here" />
 
 created: function(){
   let self = this;
-fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=2e23d7c5df2a4391a052582bd2326852')
+fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=')
       .then(function(response){
         return response.json();
       })
@@ -85,7 +84,7 @@ methods: {
  searchNews: function() {
  let self = this;
  fetch('https://newsapi.org/v2/everything?q='+
-self.searchTerm + '&language=en&apiKey=2e23d7c5df2a4391a052582bd2326852')
+self.searchTerm + '&language=en&apiKey=')
  .then(function(response) {
  return response.json();
  })
@@ -101,11 +100,30 @@ self.searchTerm + '&language=en&apiKey=2e23d7c5df2a4391a052582bd2326852')
 
 });
 
+const Home = Vue.component('home', {
+  template: `
+  <div class="home">
+  <img src="/static/images/logo.png" alt="VueJS Logo">
+  <h1>{{ welcome }}</h1>
+  </div>
+  `,
+  data: function() {
+  return {
+  welcome: 'Hello World! Welcome to VueJS'
+  }
+  }
+ });
 
-let app = new Vue({
+ const router = new VueRouter({
+  mode: 'history',
+  routes: [
+  { path: '/', component: Home },
+  { path: '/news', component: NewsList }
+  ]
+ });
+
+const app = new Vue({
     el: '#app',
-    data: {
-        welcome: 'Hello World! Welcome to VueJS'
-    }
+    router
 });
 
